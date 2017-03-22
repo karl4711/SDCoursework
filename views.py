@@ -64,11 +64,26 @@ def new_warband():
         print base_items
         return render_template('blankband.html', troops=base_troops, specialisms = base_specialisms, items = base_items, band=None, captain=None, ensign=None), httpcodes.OK
     if request.method == 'POST':
-      #TODO DEAL WITH JSON
-        set_trace()
-        print request
+        band = eval(request.form['band'])
+        captain = eval(request.form['captain'])
+        ensign = eval(request.form['ensign'])
 
-        return "ok"
+        captain_id = insert_member(captain,"captain")
+        ensign_id = 0
+        if len(ensign) > 0:
+          ensign_id = insert_member(ensign,"ensign")
+
+        band["username"] = session["current_user"]
+        band["captainId"] = captain_id
+        band["ensignId"] = ensign_id
+
+        result = {}
+        insert_result = insert_band(band)
+        if insert_result > 0:
+          result["success"] = True
+          result["url"] = url_for("views.bandlist",username=session["current_user"])
+
+        return jsonify(result = result)
 
 
 @views.route('/bandlist/<username>', methods=['GET'])

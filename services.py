@@ -83,3 +83,18 @@ def update_public_status(band_name, public_status):
 
 	result = execute_update(sql, params)
 	return result
+
+
+def insert_member(member, type):
+	
+	sql = "INSERT INTO MEMBERS (TYPE, MOVE, FIGHT, SHOOT, SHIELD, MORALE, HEALTH, SPECIALISM, SKILLS, WEAPONS, ITEMS) VALUES(?,?,?,?,?,?,?,?,?,?,?)"
+	params = (type, member["move"],member["fight"],member["shoot"],member["shield"],member["morale"],member["health"],member["specialism"],str(member["skills"]),member["weapons"],member["items"])
+
+	return execute_insert(sql, params)
+
+
+def insert_band(band):
+	sql = "INSERT INTO BANDS VALUES(?,?,?,?,?,?,?)"
+	params = (band["name"], band["username"], 0, band["captainId"], band["ensignId"], band["currency"], str(band["soldiers"]))
+
+	return execute_insert(sql, params)

@@ -16,7 +16,6 @@
           <div class="col-sm-3">
             <input type="text" class="form-control " id="bandname" name="bandname" value="{{band["name"]}}"/>
           </div>
-          <label id="bandname_error" class="control-label col-sm-3" for="bandname">warband name cannot be null.</label>
         </div>
         <div class="form-group">
           <label class="col-sm-3  control-label">Currency remainning </label>
@@ -48,9 +47,9 @@
               </div>
               <div class="col-sm-7">
                 <label class="col-sm-2 control-label">Move:  </label>
-                <input id="move_number" class="captain_state_number col-sm-2 form-control-static"type="number" value={{captain["move"] or 5}}>
+                <input id="captain_move_number" class="captain_state_number col-sm-2 form-control-static"type="number" value={{captain["move"] or 5}}>
                 <label class="col-sm-2 control-label col-sm-offset-1">Fight:  </label>
-                <input id="fight_number" class="captain_state_number col-sm-2 form-control-static"type="number" value={{captain["fight"] or 2}}>
+                <input id="captain_fight_number" class="captain_state_number col-sm-2 form-control-static"type="number" value={{captain["fight"] or 2}}>
               </div>
               <!-- captain specialism -->
               <div class="col-sm-5">
@@ -58,9 +57,9 @@
               </div>
               <div class="col-sm-7">
                 <label class="col-sm-2 control-label">Shoot:  </label>
-                  <input id="shoot_number" class="captain_state_number col-sm-2 form-control-static"type="number" value={{captain["shoot"] or 2}}>
+                  <input id="captain_shoot_number" class="captain_state_number col-sm-2 form-control-static"type="number" value={{captain["shoot"] or 2}}>
                 <label class="col-sm-2 control-label col-sm-offset-1">Shield:  </label>
-                  <input id="shield_number" class="captain_state_number col-sm-2 form-control-static"type="number" value={{captain["shield"] or 12}}>
+                  <input id="captain_shield_number" class="captain_state_number col-sm-2 form-control-static"type="number" value={{captain["shield"] or 12}}>
               </div>
               <div class="col-sm-4">
                 <select id="captain_spec_select" class="form-control spec_select" {{captain and "disabled" or ""}}>
@@ -75,9 +74,9 @@
               </div>
               <div class="col-sm-7">
                 <label class="col-sm-2 control-label">Morale:  </label>
-                <input id="morale_number" class="captain_state_number col-sm-2 form-control-static"type="number" value={{captain["morale"] or 4}}>
+                <input id="captain_morale_number" class="captain_state_number col-sm-2 form-control-static"type="number" value={{captain["morale"] or 4}}>
                 <label class="col-sm-2 control-label col-sm-offset-1">Health:  </label>
-                <input id="health_number" class="captain_state_number col-sm-2 form-control-static"type="number" value={{captain["health"] or 12}}>
+                <input id="captain_health_number" class="captain_state_number col-sm-2 form-control-static"type="number" value={{captain["health"] or 12}}>
               </div>
               <!-- captain skills -->
               <div class="col-sm-12">
@@ -91,7 +90,7 @@
                   {% endfor %}
                   {% else %}
                   <label class="radio-inline">
-                    <input type="radio" name="captain_skill_radio" id="captain_skill_radio1" value="Shield"> <span id="captain_skill1">Shield</span>
+                    <input type="radio" name="captain_skill_radio" id="captain_skill_radio1" value="Shield" checked> <span id="captain_skill1">Shield</span>
                   </label>
                   <label class="radio-inline">
                     <input type="radio" name="captain_skill_radio" id="captain_skill_radio2" value="Sacrifice"> <span id="captain_skill2">Sacrifice</span>
@@ -182,18 +181,18 @@
               </div>
               <div class="col-sm-7">
                 <label class="col-sm-2 control-label">Move:  </label>
-                <input id="move_number" class="ensign_state_number col-sm-2 form-control-static"type="number" value={{ensign["move"] or 7}}>
+                <input id="ensign_move_number" class="ensign_state_number col-sm-2 form-control-static"type="number" value={{ensign["move"] or 7}}>
                 <label class="col-sm-2 control-label col-sm-offset-1">Fight:  </label>
-                <input id="fight_number" class="ensign_state_number col-sm-2 form-control-static"type="number" value={{ensign["fight"] or 0}}>
+                <input id="ensign_fight_number" class="ensign_state_number col-sm-2 form-control-static"type="number" value={{ensign["fight"] or 0}}>
               </div>
               <div class="col-sm-5">
                 <label class="control-label">Specialism: </label>
               </div>
               <div class="col-sm-7">
                 <label class="col-sm-2 control-label">Shoot:  </label>
-                  <input id="shoot_number" class="ensign_state_number col-sm-2 form-control-static"type="number" value={{ensign["shoot"] or -1}}>
+                  <input id="ensign_shoot_number" class="ensign_state_number col-sm-2 form-control-static"type="number" value={{ensign["shoot"] or -1}}>
                 <label class="col-sm-2 control-label col-sm-offset-1">Shield:  </label>
-                  <input id="shield_number" class="ensign_state_number col-sm-2 form-control-static"type="number" value={{ensign["shield"] or 10}}>
+                  <input id="ensign_shield_number" class="ensign_state_number col-sm-2 form-control-static"type="number" value={{ensign["shield"] or 10}}>
               </div>
               <div class="col-sm-4">
                 <select id="ensign_spec_select" class="form-control spec_select" {{ensign and "disabled" or ""}}>
@@ -208,9 +207,9 @@
               </div>
               <div class="col-sm-7">
                 <label class="col-sm-2 control-label">Morale:  </label>
-                <input id="morale_number" class="ensign_state_number col-sm-2 form-control-static"type="number" value={{ensign["morale"] or 2}}>
+                <input id="ensign_morale_number" class="ensign_state_number col-sm-2 form-control-static"type="number" value={{ensign["morale"] or 2}}>
                 <label class="col-sm-2 control-label col-sm-offset-1">Health:  </label>
-                <input id="health_number" class="ensign_state_number col-sm-2 form-control-static"type="number" value={{ensign["health"] or 8}}>
+                <input id="ensign_health_number" class="ensign_state_number col-sm-2 form-control-static"type="number" value={{ensign["health"] or 8}}>
               </div>
               <!-- ensign skills -->
               <div class="col-sm-12">
@@ -224,7 +223,7 @@
                   {% endfor %}
                   {% else %}
                   <label class="radio-inline">
-                    <input type="radio" name="ensign_skill_radio" id="ensign_skill_radio1" value="Shield"> <span id="ensign_skill1">Shield</span>
+                    <input type="radio" name="ensign_skill_radio" id="ensign_skill_radio1" value="Shield" checked> <span id="ensign_skill1">Shield</span>
                   </label>
                   <label class="radio-inline">
                     <input type="radio" name="ensign_skill_radio" id="ensign_skill_radio2" value="Sacrifice"> <span id="ensign_skill2">Sacrifice</span>
@@ -324,7 +323,7 @@
                 </li>
                 {% endfor %}
               </ul>
-              <button id="add_new_soldier" type="button" class="btn btn-success" data-toggle="modal" data-target="#soldierModal">Add new soldier</button>
+              <button id="add_new_soldier" type="button" class="btn btn-success" data-toggle="modal">Add new soldier</button>
             </div>
           </div>
 
@@ -405,6 +404,8 @@
       var ensign_check = $("#ensign_check");
 
       var flag = "captain";
+      var member_length_limit = 10;
+
       
       ensign_panel.hide();
 
@@ -413,9 +414,10 @@
 
        $("#submit_button").click(function(){
 
-          var band = {};
-          band.name = $("#bandname").val();
-          band.currency = parseInt(currency.val());
+          if ($("#bandname").val().trim()=="") {
+            alert("warband name cannot be null!")
+            return;
+          };
 
           soldiers = [];
           var soldier_btns = $(".soldier_btn");
@@ -423,7 +425,18 @@
             soldiers.push($(soldier_btns[i]).text());
           };
 
+          var band = {};
+          band.name = $("#bandname").val();
+          band.currency = parseInt(currency.val());
+          band.soldiers = soldiers;
+
           var captain = {};
+          captain.move = $("#captain_move_number").val();
+          captain.fight = $("#captain_fight_number").val();
+          captain.shoot = $("#captain_shoot_number").val();
+          captain.shield = $("#captain_shield_number").val();
+          captain.morale = $("#captain_morale_number").val();
+          captain.health = $("#captain_health_number").val();
           captain.specialism = $("#captain_spec_select").val();
           captain.skills = [$('input[name=captain_skill_radio]:checked').val()];
           captain.weapons = $("#captain_weapon_p").text();
@@ -431,20 +444,28 @@
 
           var ensign = {};
           if (ensign_check.attr("checked")) {
+            ensign.move = $("#ensign_move_number").val();
+            ensign.fight = $("#ensign_fight_number").val();
+            ensign.shoot = $("#ensign_shoot_number").val();
+            ensign.shield = $("#ensign_shield_number").val();
+            ensign.morale = $("#ensign_morale_number").val();
+            ensign.health = $("#ensign_health_number").val();
             ensign.specialism = $("#ensign_spec_select").val();
             ensign.skills = [$('input[name=ensign_skill_radio]:checked').val()];
             ensign.weapons = $("#ensign_weapon_p").text();
             ensign.items = $("#ensign_item_p").text();
           }
 
-
           $.post("{{url_for("views.new_warband")}}", {
                   band : JSON.stringify(band),
-                  soldiers : JSON.stringify(soldiers),
                   captain : JSON.stringify(captain),
                   ensign : JSON.stringify(ensign)
               }, function(data) {
-                console.log(data.result);
+                if (data.result.success) {
+                  window.location = data.result.url;
+                } else{
+                  alert("band submit failed!");
+                }
               });
 
       });
@@ -480,6 +501,15 @@
 
       // ----------------------- soldier table ------------------------------
 
+      $("#add_new_soldier").click(function(){
+        var member_length = ensign_check.attr("checked") ? 2 : 1;
+        
+        if ($(".soldier_btn").length + member_length >= member_length_limit){
+          alert("cannot add more than 10 members(including captain and ensign).");
+          return;
+        }
+        $("#soldierModal").modal("show");
+      });
 
       function removeSoldier(element){
         if(confirm("Are you sure to remove the soldier? There would be no refunds.")){
@@ -531,6 +561,13 @@
       ensign_check.on("click", function(event){
         var is_hire =  $(this).attr("checked") == "checked" ? 0 : 1;
         if (is_hire) {
+
+          if ($(".soldier_btn").length + 1 >= member_length_limit){
+            alert("cannot add more than 10 members(including captain and ensign).");
+            event.preventDefault();
+            event.stopPropagation();
+            return;
+          }
 
           if(!update_currency(250)){
             event.preventDefault();
