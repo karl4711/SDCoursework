@@ -3,10 +3,11 @@ $(function() {
 
     
 
-	//----------------------- state and exp -------------------------------
+	//----------------------- state & skills & exp ------------------------------
 
 	  var state_number = $(".captain_state_number");
-	  var exp = $(".captain_exp");
+	  var exp = $("#captain_exp");
+    var skill_check = $(".captain_skill_checkbox");
 	  
       state_number.attr("max", function(){
         if (parseInt(exp.val())>=10){
@@ -25,6 +26,24 @@ $(function() {
           exp.val(parseInt(exp.val())+10);
         }
         exp.trigger("change");
+      });
+
+      skill_check.on("click", function(event){
+          var is_check =  $(this).attr("checked") == "checked" ? 0 : 1;
+          if (is_check) {
+            if (parseInt(exp.val()) < 10) {
+              alert("Experience not enough!");
+              event.preventDefault();
+              event.stopPropagation();
+              return;
+            };
+            exp.val(parseInt(exp.val())-10);
+            $(this).attr('checked', true);
+          } else {
+            exp.val(parseInt(exp.val())+10);
+            $(this).attr('checked', false);
+          }
+          exp.trigger("change");
       });
 
       exp.on("change", function(){
