@@ -1,0 +1,581 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Ship Crew Editor</title>
+    <link rel="stylesheet" type="text/css" href="/static/lib/bootstrap-3.3.7/css/bootstrap.min.css">
+  </head>
+  <body>
+    <div class="container">
+      <div class="page-header">
+        <h1>Edit your band</h1>
+      </div>
+      <br>
+      <form id="form1" method="POST" class="form-horizontal">
+        <div id="bandname_group" class="form-group">
+          <label class="col-sm-2 control-label col-sm-offset-1" for="bandname">Warband Name</label>
+          <div class="col-sm-3">
+            <input type="text" class="form-control " id="bandname" name="bandname" value="{{band["name"]}}"/>
+          </div>
+          <label id="bandname_error" class="control-label col-sm-3" for="bandname">warband name cannot be null.</label>
+        </div>
+        <div class="form-group">
+          <label class="col-sm-3  control-label">Currency remainning </label>
+
+          <input id="currency" class="col-sm-1 form-control-static" type="number" value={{band["currency"] or 500}} disabled>
+          
+          <div class="col-sm-5 col-sm-offset-3">
+            <label class="control-label">Hire apprentice? </label>
+            <input id="ensign_check" type="checkbox" {{ensign and "checked" or ""}} />
+          </div>
+        </div>
+        
+        <hr>
+
+        <div class="form-group">
+
+          <!-- left tab -->
+          <ul class="nav nav-pills nav-stacked col-sm-2">
+            <li role="presentation" class="active"><a id="captain_tab">Captain</a></li>
+            <li role="presentation"><a id="ensign_tab">Apprentice</a></li>
+          </ul>
+
+          <!-- captain panel -->
+          <div id="captain_panel" class="panel panel-default col-sm-8">
+            <div class="panel-body">
+              <div class="col-sm-12 col-sm-offset-6">
+                <label class="col-sm-3 control-label">Experience: </label>
+                <input id="captain_exp" class="exp col-sm-2 form-control-static" type="number" value={{captain["experience"] or 0}} disabled>
+              </div>
+              <div class="col-sm-7">
+                <label class="col-sm-2 control-label">Move:  </label>
+                <input id="move_number" class="captain_state_number col-sm-2 form-control-static"type="number" value={{captain["move"] or 5}}>
+                <label class="col-sm-2 control-label col-sm-offset-1">Fight:  </label>
+                <input id="fight_number" class="captain_state_number col-sm-2 form-control-static"type="number" value={{captain["fight"] or 2}}>
+              </div>
+              <!-- captain specialism -->
+              <div class="col-sm-5">
+                <label class="control-label">Specialism: </label>
+              </div>
+              <div class="col-sm-7">
+                <label class="col-sm-2 control-label">Shoot:  </label>
+                  <input id="shoot_number" class="captain_state_number col-sm-2 form-control-static"type="number" value={{captain["shoot"] or 2}}>
+                <label class="col-sm-2 control-label col-sm-offset-1">Shield:  </label>
+                  <input id="shield_number" class="captain_state_number col-sm-2 form-control-static"type="number" value={{captain["shield"] or 12}}>
+              </div>
+              <div class="col-sm-4">
+                <select id="captain_spec_select" class="form-control spec_select" {{captain and "disabled" or ""}}>
+                  {% if captain: %}
+                  <option value="{{captain["specialism"]}}" selected>{{captain["specialism"]}}</option>
+                  {% else %}
+                  {% for spec in specialisms %}
+                  <option value="{{spec}}">{{spec}}</option>
+                  {% endfor %}
+                  {% endif %}
+                </select>
+              </div>
+              <div class="col-sm-7">
+                <label class="col-sm-2 control-label">Morale:  </label>
+                <input id="morale_number" class="captain_state_number col-sm-2 form-control-static"type="number" value={{captain["morale"] or 4}}>
+                <label class="col-sm-2 control-label col-sm-offset-1">Health:  </label>
+                <input id="health_number" class="captain_state_number col-sm-2 form-control-static"type="number" value={{captain["health"] or 12}}>
+              </div>
+              <!-- captain skills -->
+              <div class="col-sm-12">
+                <label class="col-sm-2 control-label">Skills:  </label>
+                <div class="col-sm-10">
+                  {% if captain: %}
+                  {% for skill in specialisms[captain["specialism"]]%}
+                  <label class="checkbox-inline">
+                    <input type="checkbox" value="{{skill}}" {{skill in captain["skills"] and "checked" or ""}}> {{skill}}
+                  </label>
+                  {% endfor %}
+                  {% else %}
+                  <label class="radio-inline">
+                    <input type="radio" name="captain_skill_radio" id="captain_skill_radio1" value="Shield"> <span id="captain_skill1">Shield</span>
+                  </label>
+                  <label class="radio-inline">
+                    <input type="radio" name="captain_skill_radio" id="captain_skill_radio2" value="Sacrifice"> <span id="captain_skill2">Sacrifice</span>
+                  </label>
+                  <label class="radio-inline">
+                    <input type="radio" name="captain_skill_radio" id="captain_skill_radio3" value="Resolute"> <span id="captain_skill3">Resolute</span>
+                  </label>
+                  {% endif %}
+
+                </div>
+              </div>
+              <!-- captain equipments -->
+              <div class="col-sm-8">
+                <label class="col-sm-4 control-label">Weapons:  </label>
+                <div class="col-sm-6">
+                  <p id="captain_weapon_p" class="form-control-static">
+                    {% for item in captain["weapons"] %}
+                      {{item}},
+                    {% endfor %}
+                  </p>
+                </div>
+                <label class="col-sm-4 control-label">Equipment:  </label>
+                <div class="col-sm-4">
+                  <p id="captain_item_p" class="form-control-static">
+                    {% for item in captain["items"] %}
+                      {{item}},
+                    {% endfor %}
+                  </p>
+                </div>
+                <div class="col-sm-2">
+                  <button id="captain_item_btn" type="button" class="btn btn-primary" data-toggle="modal">Change</button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Captain Weapon Modal -->
+          <div class="modal fade" id="captain_item_modal" data-backdrop="static" data-keyboard="false" tabindex="-1" role="dialog" aria-labelledby="captain_weapon_modal_label">
+            <div class="modal-dialog" role="document">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h4 class="modal-title" id="captain_weapon_modal_label">Change weapons and equipments - Captain</h4>
+                </div>
+                <div class="modal-body">
+                  <div class="row">
+                    <div class="col-sm-5 col-sm-offset-1">
+                      <h4 class="col-sm-2">Weapons </h4>
+                      <div class="col-sm-12">
+                      {% for item in items%}
+                      {% if items[item]["type"] == 1%}
+                      <label class="checkbox">
+                        <input type="checkbox" class="captain_weapon captain_item" value="{{item}}" {{item in captain["weapons"] and "checked" or ""}}> {{item}}
+                        (<span>{{items[item]["cost"]}}</span>)
+                      </label>
+                      {% endif %}
+                      {% endfor %}
+                      </div>
+                    </div>
+                    <div class="col-sm-6">
+                      <h4 class="col-sm-6">Other items</h4>
+                      <div class="col-sm-12">
+                      {% for item in items%}
+                      {% if items[item]["type"] == 0%}
+                      <label class="checkbox">
+                        <input type="checkbox" class="captain_other_item captain_item" value="{{item}}" {{item in captain["weapons"] and "checked" or ""}}> {{item}}
+                        (<span>{{items[item]["cost"]}}</span>)
+                      </label>
+                      {% endif %}
+                      {% endfor %}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="modal-footer">
+                  <button id="captain_item_ok" type="button" class="btn btn-primary">OK</button>
+                </div>
+              </div>
+            </div>
+            <input id="old_captain_item_cost" type="hidden">
+          </div>
+
+          <!-- Ensign panel -->
+          <div id="ensign_panel" class="panel panel-default col-sm-8">
+            <div class="panel-body">
+              <div class="col-sm-12 col-sm-offset-6">
+                <label class="col-sm-3 control-label">Experience: </label>
+                <input id="ensign_exp" class="exp col-sm-2 form-control-static" type="number" value={{ensign["experience"] or 0}} disabled>
+              </div>
+              <div class="col-sm-7">
+                <label class="col-sm-2 control-label">Move:  </label>
+                <input id="move_number" class="ensign_state_number col-sm-2 form-control-static"type="number" value={{ensign["move"] or 7}}>
+                <label class="col-sm-2 control-label col-sm-offset-1">Fight:  </label>
+                <input id="fight_number" class="ensign_state_number col-sm-2 form-control-static"type="number" value={{ensign["fight"] or 0}}>
+              </div>
+              <div class="col-sm-5">
+                <label class="control-label">Specialism: </label>
+              </div>
+              <div class="col-sm-7">
+                <label class="col-sm-2 control-label">Shoot:  </label>
+                  <input id="shoot_number" class="ensign_state_number col-sm-2 form-control-static"type="number" value={{ensign["shoot"] or -1}}>
+                <label class="col-sm-2 control-label col-sm-offset-1">Shield:  </label>
+                  <input id="shield_number" class="ensign_state_number col-sm-2 form-control-static"type="number" value={{ensign["shield"] or 10}}>
+              </div>
+              <div class="col-sm-4">
+                <select id="ensign_spec_select" class="form-control spec_select" {{ensign and "disabled" or ""}}>
+                  {% if ensign: %}
+                  <option value="{{ensign["specialism"]}}" selected>{{ensign["specialism"]}}</option>
+                  {% else %}
+                  {% for spec in specialisms %}
+                  <option value="{{spec}}">{{spec}}</option>
+                  {% endfor %}
+                  {% endif %}
+                </select>
+              </div>
+              <div class="col-sm-7">
+                <label class="col-sm-2 control-label">Morale:  </label>
+                <input id="morale_number" class="ensign_state_number col-sm-2 form-control-static"type="number" value={{ensign["morale"] or 2}}>
+                <label class="col-sm-2 control-label col-sm-offset-1">Health:  </label>
+                <input id="health_number" class="ensign_state_number col-sm-2 form-control-static"type="number" value={{ensign["health"] or 8}}>
+              </div>
+              <!-- ensign skills -->
+              <div class="col-sm-12">
+                <label class="col-sm-2 control-label">Skills:  </label>
+                <div class="col-sm-10">
+                  {% if ensign: %}
+                  {% for skill in specialisms[ensign["specialism"]]%}
+                  <label class="checkbox-inline">
+                    <input type="checkbox" value="{{skill}}" {{skill in ensign["skills"] and "checked" or ""}}> {{skill}}
+                  </label>
+                  {% endfor %}
+                  {% else %}
+                  <label class="radio-inline">
+                    <input type="radio" name="ensign_skill_radio" id="ensign_skill_radio1" value="Shield"> <span id="ensign_skill1">Shield</span>
+                  </label>
+                  <label class="radio-inline">
+                    <input type="radio" name="ensign_skill_radio" id="ensign_skill_radio2" value="Sacrifice"> <span id="ensign_skill2">Sacrifice</span>
+                  </label>
+                  <label class="radio-inline">
+                    <input type="radio" name="ensign_skill_radio" id="ensign_skill_radio3" value="Resolute"> <span id="ensign_skill3">Resolute</span>
+                  </label>
+                  {% endif %}
+
+                </div>
+              </div>
+              <!-- ensign equipments -->
+              <div class="col-sm-8">
+                <label class="col-sm-4 control-label">Weapons:  </label>
+                <div class="col-sm-6">
+                  <p id="ensign_weapon_p" class="form-control-static">
+                    {% for item in ensign["weapons"] %}
+                      {{item}},
+                    {% endfor %}
+                  </p>
+                </div>
+                <label class="col-sm-4 control-label">Equipment:  </label>
+                <div class="col-sm-4">
+                  <p id="ensign_item_p" class="form-control-static">
+                    {% for item in ensign["items"] %}
+                      {{item}},
+                    {% endfor %}
+                  </p>
+                </div>
+                <div class="col-sm-2">
+                  <button id="ensign_item_btn" type="button" class="btn btn-primary" data-toggle="modal">Change</button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Ensign Weapon Modal -->
+          <div class="modal fade" id="ensign_item_modal" data-backdrop="static" data-keyboard="false" tabindex="-1" role="dialog" aria-labelledby="ensign_item_modal_label">
+            <div class="modal-dialog" role="document">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h4 class="modal-title" id="ensign_item_modal_label">Change weapons and equipments - Ensign</h4>
+                </div>
+                <div class="modal-body">
+                  <div class="row">
+                    <div class="col-sm-5 col-sm-offset-1">
+                      <h4 class="col-sm-2">Weapons </h4>
+                      <div class="col-sm-12">
+                      {% for item in items%}
+                      {% if items[item]["type"] == 1%}
+                      <label class="checkbox">
+                        <input type="checkbox" class="ensign_weapon ensign_item" value="{{item}}" {{item in ensign["weapons"] and "checked" or ""}}> {{item}}
+                        (<span>{{items[item]["cost"]}}</span>)
+                      </label>
+                      {% endif %}
+                      {% endfor %}
+                      </div>
+                    </div>
+                    <div class="col-sm-6">
+                      <h4 class="col-sm-6">Other items</h4>
+                      <div class="col-sm-12">
+                      {% for item in items%}
+                      {% if items[item]["type"] == 0%}
+                      <label class="checkbox">
+                        <input type="checkbox" class="ensign_other_item ensign_item" value="{{item}}" {{item in ensign["weapons"] and "checked" or ""}}> {{item}}
+                        (<span>{{items[item]["cost"]}}</span>)
+                      </label>
+                      {% endif %}
+                      {% endfor %}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="modal-footer">
+                  <button id="ensign_item_ok" type="button" class="btn btn-primary">OK</button>
+                </div>
+              </div>
+            </div>
+            <input id="old_ensign_item_cost" type="hidden" value="0">
+          </div>
+
+
+        </div>
+
+        <!-- Soldier panel -->
+        <div class="form-group">
+          <div class="panel panel-primary">
+            <div class="panel-heading">Standard soldiers</div>
+            <div class="panel-body">
+              <ul id="soldier_list" class="list-inline">
+                {% for soldier in band["soldiers"] %}
+                <li>
+                  <div class="btn-group" role="group">
+                  <button type="button" class="btn btn-default soldier_btn" >{{soldier}}</button>
+                  <button type="button" class="remove_soldier btn btn-primary" onclick="removeSoldier(this.parentElement.parentElement)">X</button>
+                  </div>
+                </li>
+                {% endfor %}
+              </ul>
+              <button id="add_new_soldier" type="button" class="btn btn-success" data-toggle="modal" data-target="#soldierModal">Add new soldier</button>
+            </div>
+          </div>
+
+
+          <!-- Soldier Modal -->
+          <div class="modal fade" id="soldierModal" data-backdrop="static" data-keyboard="false" tabindex="-1" role="dialog" aria-labelledby="soldierModalLabel">
+            <div class="modal-dialog" role="document">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h4 class="modal-title" id="soldierModalLabel">Add new soldier</h4>
+                </div>
+                <div class="modal-body">
+
+                  <!-- <div class="table-wrapper"> -->
+                    <table class="table">
+                      <thead>
+                        <tr>
+                          <th>Class</th>
+                          <th>Move</th>
+                          <th>Fight</th>
+                          <th>Shoot</th>
+                          <th>Shield</th>
+                          <th>Morale</th>
+                          <th>Health</th>
+                          <th>Cost</th>
+                          <th>Notes</th>
+                        </tr>
+                      </thead>
+                        <tr class="primary">
+                          <td>
+                            <select id="soldier_select" class="form-control soldier_select">
+                              {% for troop in troops %}
+                              <option value="{{troop}}">{{troop}}</option>
+                              {% endfor %}
+                            </select>
+                          </td>
+                          <td id="soldier_move">8</td>
+                          <td id="soldier_fight">3</td>
+                          <td id="soldier_shoot">0</td>
+                          <td id="soldier_shield">10</td>
+                          <td id="soldier_morale">2</td>
+                          <td id="soldier_health">8</td>
+                          <td id="soldier_cost">20</td>
+                          <td id="soldier_notes">Animal, Cannot carry treasure or items</td>
+                        </tr>
+                    </table>
+                  <!-- </div> -->
+
+                </div>
+                <div class="modal-footer">
+                  <button id="soldier_ok" type="button" class="btn btn-primary">OK</button>
+                  <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </form>
+
+       <div class="row">
+        <button id="submit_button" type="button" class="btn btn-primary col-sm-1 col-sm-offset-4">OK</button>
+        <button type="button" class="btn btn-primary col-sm-1 col-sm-offset-1">Cancel</button>
+      </div>
+    </div>
+
+    <script src="/static/lib/jquery-3.2.0/jquery.min.js"></script>
+    <script src="/static/lib/bootstrap-3.3.7/js/bootstrap.min.js"></script>
+    <script src="/static/scripts/captain.js"></script>
+    <script src="/static/scripts/ensign.js"></script>
+    <script type="text/javascript">
+      var captain_tab = $("#captain_tab");
+      var ensign_tab = $("#ensign_tab");
+      var ensign_panel = $("#ensign_panel");
+      var captain_panel = $("#captain_panel");
+      var spec_select = $(".spec_select");
+      var currency = $("#currency");
+      var soldier_cost = $("#soldier_cost");
+      var ensign_check = $("#ensign_check");
+
+      var flag = "captain";
+      
+      ensign_panel.hide();
+
+
+      // ----------------------- submit ------------------------------
+
+       $("#submit_button").click(function(){
+
+          var band = {};
+          band.name = $("#bandname").val();
+          band.currency = parseInt(currency.val());
+
+          soldiers = [];
+          var soldier_btns = $(".soldier_btn");
+          for (var i = 0; i < soldier_btns.length; i++) {
+            soldiers.push($(soldier_btns[i]).text());
+          };
+
+          var captain = {};
+          captain.specialism = $("#captain_spec_select").val();
+          captain.skills = [$('input[name=captain_skill_radio]:checked').val()];
+          captain.weapons = $("#captain_weapon_p").text();
+          captain.items = $("#captain_item_p").text();
+
+          var ensign = {};
+          if (ensign_check.attr("checked")) {
+            ensign.specialism = $("#ensign_spec_select").val();
+            ensign.skills = [$('input[name=ensign_skill_radio]:checked').val()];
+            ensign.weapons = $("#ensign_weapon_p").text();
+            ensign.items = $("#ensign_item_p").text();
+          }
+
+
+          $.post("{{url_for("views.new_warband")}}", {
+                  band : JSON.stringify(band),
+                  soldiers : JSON.stringify(soldiers),
+                  captain : JSON.stringify(captain),
+                  ensign : JSON.stringify(ensign)
+              }, function(data) {
+                console.log(data.result);
+              });
+
+      });
+
+
+      // ----------------------- soldier modal ------------------------------
+
+      $("#soldier_ok").click(function(){
+        if(!update_currency(parseInt(soldier_cost.text()))){
+          return;
+        }
+
+        $("#soldier_list").append("<li><div class='btn-group' role='group'><button type='button' class='btn btn-default soldier_btn'>"+$("#soldier_select").val()+"</button><button type='button' class='remove_soldier btn btn-primary' onclick='removeSoldier(this.parentElement.parentElement)'>X</button></div></li>");
+
+        $("#soldierModal").modal("hide");
+      });
+
+      $("#soldier_select").on("change",function(){
+        {% for troop in troops %}
+        if ($(this).val() == "{{troop}}") {
+          $("#soldier_move").text("{{ troops[troop]["move"] }}");
+          $("#soldier_fight").text("{{ troops[troop]["fight"] }}");
+          $("#soldier_shoot").text("{{ troops[troop]["shoot"] }}");
+          $("#soldier_shield").text("{{ troops[troop]["shield"] }}");
+          $("#soldier_morale").text("{{ troops[troop]["morale"] }}");
+          $("#soldier_health").text("{{ troops[troop]["health"] }}");
+          soldier_cost.text("{{ troops[troop]["cost"] }}");
+          $("#soldier_notes").text("{{ troops[troop]["notes"] }}");
+        };
+        {% endfor %}
+      });
+
+
+      // ----------------------- soldier table ------------------------------
+
+
+      function removeSoldier(element){
+        if(confirm("Are you sure to remove the soldier? There would be no refunds.")){
+          $(element).remove();
+        }
+      }
+
+      //--------------------------- spec ---------------------------
+
+      spec_select.on("change",function(){
+
+        {% for spec in specialisms %}
+        if ($(this).val() == "{{spec}}") {
+          $("#"+flag+"_skill_radio1").val("{{ specialisms[spec][0] }}");
+          $("#"+flag+"_skill1").text("{{ specialisms[spec][0] }}");
+
+          $("#"+flag+"_skill_radio2").val("{{ specialisms[spec][1] }}");
+          $("#"+flag+"_skill2").text("{{ specialisms[spec][1] }}");
+
+          $("#"+flag+"_skill_radio3").val("{{ specialisms[spec][2] }}");
+          $("#"+flag+"_skill3").text("{{ specialisms[spec][2] }}");
+        };
+        {% endfor %}
+
+      });
+
+      //----------------- Hire apprentice checkbox & left tab ---------------
+
+      captain_tab.on("click",function(){
+        captain_panel.show();
+        captain_tab.parent().addClass("active");
+        ensign_panel.hide();
+        ensign_tab.parent().removeClass("active");
+        flag = "captain";
+      });
+
+      if (ensign_check.attr("checked")!="checked") {
+        ensign_tab.parent().addClass("disabled");
+      } else {
+        ensign_tab.bind("click",function(){
+          ensign_panel.show();
+          ensign_tab.parent().addClass("active");
+          captain_panel.hide();
+          captain_tab.parent().removeClass("active");
+          flag = "ensign";
+        });
+      }
+
+      ensign_check.on("click", function(event){
+        var is_hire =  $(this).attr("checked") == "checked" ? 0 : 1;
+        if (is_hire) {
+
+          if(!update_currency(250)){
+            event.preventDefault();
+            event.stopPropagation();
+            return;
+          }
+
+          $(this).attr('checked', true);
+          ensign_tab.parent().removeClass("disabled");
+          ensign_tab.bind("click",function(){
+            ensign_panel.show();
+            ensign_tab.parent().addClass("active");
+            captain_panel.hide();
+            captain_tab.parent().removeClass("active");
+            flag = "ensign";
+          });
+        } else {
+          //should consider ensign's items
+          update_currency(-250-parseInt($("#old_ensign_item_cost").val()));
+          $('.ensign_item:checked').trigger("click");
+          $("#ensign_weapon_p").text("");
+          $("#ensign_item_p").text("");
+          $("#old_ensign_item_cost").val("0");
+          
+
+          $(this).attr('checked', false);
+          ensign_tab.parent().addClass("disabled");
+          ensign_tab.unbind("click");
+        }
+
+      });
+
+      //----------------------------- utilities -------------------------
+
+      function update_currency(cost){
+        var rest_currency = parseInt(currency.val()) - cost;
+        if (rest_currency < 0) {
+          alert("currency not enough!");
+          return false;
+        };
+
+        currency.val(rest_currency);
+        return true;
+      }
+
+    </script>
+  </body>
+</html>

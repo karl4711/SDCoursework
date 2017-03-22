@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Login Page</title>
+		<link rel="stylesheet" type="text/css" href="/static/lib/bootstrap-3.3.7/css/bootstrap.min.css">
+	</head>
+	<body>
+		<div class="container">
+			<div class="page-header">
+				<h1>Welcome to the FG Warband Manager!</h1>
+			</div>
+			<br>
+			<br>
+			<div class="row col-sm-5 col-sm-offset-3">
+				<form id="form1" class="form-horizontal" method="POST" action="{{url_for("views.login")}}">
+					<div id="username_group" class="form-group">
+						<label for="username">Username or email address</label>
+						<input type="text" class="form-control " id="username" name="username"/>
+						<label id="username_error" class="control-label" for="username"></label>
+					</div>
+					<div id="passward_group" class="form-group">
+						<label for="password">Password</label>
+						<input type="password" class="form-control" id="password" name="password"/>
+						<label id="password_error" class="control-label" for="password"></label>
+					</div>
+					<div class="form-group">
+						<a id="submit" class="btn btn-primary btn-block">Sign in</a>
+					</div>
+				</form>
+			</div>
+		</div>
+		<script src="/static/lib/jquery-3.2.0/jquery.min.js"></script>
+		<script src="/static/lib/bootstrap-3.3.7/js/bootstrap.min.js"></script>
+		<script type="text/javascript">
+		    var submitButtion = $("#submit");
+    		var form1 = $("#form1");
+    		var username = $("#username");
+    		var password = $("#password");
+    		var username_error = $("#username_error");
+    		var password_error = $("#password_error");
+    		var username_group = $("#username_group");
+    		var passward_group = $("#passward_group");
+
+			username.val('{{username}}');
+
+    		if ('{{username_error}}'=='True') {
+    			username_group.addClass("has-error");
+    			username_error.text("Username wrong.");
+    		};
+
+    		if ('{{password_error}}'=='True') {
+    			passward_group.addClass("has-error");
+    			password_error.text("Password wrong.");
+    		};
+
+			submitButtion.on("click",function(){
+				if (!username.val()) {
+					username_group.addClass("has-error");
+					username_error.text("Username cannot be null.");
+				} else if(!password.val()){
+					passward_group.addClass("has-error");
+					password_error.text("Password cannot be null.");
+				} else{
+					form1.submit();
+				}
+			});
+		</script>
+	</body>
+</html>
