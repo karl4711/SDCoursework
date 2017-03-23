@@ -1,38 +1,47 @@
 # SDCoursework
 This is the project for SD coursework 3.
 
-1. Download and setup:
+### Download and setup:
 
-	$ git clone git@github.com:karl4711/SDCoursework.git
-	$ cd SDCoursework
-	$ pip install -r requirements.txt
+```bash
+git clone git@github.com:karl4711/SDCoursework.git
+cd SDCoursework
+pip install -r requirements.txt
+```
 
 You need Python 2 and Flask to run the project.
 
 
-2. Run the project:
+### Run the project:
 
-2.1 The 1st way: 
+#### The 1st way: 
 
-	You can run the project by typing:
+You can run the project by typing:
 
-		$ python framework.py
+```
+python framework.py
+```
+
+#### The 2nd way: 
+
+On windows, simply run the `run.bat` file.
+
+On Linux, execute the `run.sh` script:
+
+```
+./run.sh
+```
 
 
-2.2 The 2nd way: 
-
-	On windows, simply run the "run.bat" file.
-
-	On Linux, execute the "run.sh" script:
-
-		$ ./run.sh
+Then you can type "localhost:5000" in your browser to open the website.
 
 
-3. Usages:
 
-The current databse is the "app.db" file under the project. There are 2 existing players in the databse: "peter" and "jack", their password are both "123".
+### Usages:
 
-There is also a provided sql script "app.sql" to rebuild the databse with no data in it.
+The current databse is a Sqlite3 file `app.db` under the project. There are 2 existing players in the databse: "peter" and "jack", their password are both "123".
+
+There is also a provided sql script `app.sql` to rebuild the databse with no data in it. You may need to create a Sqlite3 file to execute the script.
 
 
   
