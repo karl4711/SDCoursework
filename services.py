@@ -2,6 +2,9 @@ from utilities import *
 from pdb import set_trace
 
 def query_troops():
+	"""
+	query all troops
+	"""
 	sql = "SELECT * FROM TROOPS"
 	res = execute_query(sql)
 	
@@ -12,6 +15,9 @@ def query_troops():
 	return troops
 
 def query_user(username):
+	"""
+	query a user
+	"""
 	sql = "SELECT * FROM USERS WHERE USERNAME = ?"
 	params = (username, )
 
@@ -21,6 +27,9 @@ def query_user(username):
 
 
 def query_items():
+	"""
+	query all items
+	"""
 	sql = "SELECT * FROM ITEMS"
 	res = execute_query(sql)
 	
@@ -31,6 +40,9 @@ def query_items():
 	return items
 
 def query_specialisms():
+	"""
+	query all specialisms and corresponding skills
+	"""
 	sql = "SELECT * FROM SPECIALISMS"
 	res = execute_query(sql)
 	
@@ -41,6 +53,9 @@ def query_specialisms():
 	return specialisms
 
 def query_own_band_list(username):
+	"""
+	query the player's own band list
+	"""
 	sql = "SELECT NAME,PUBLIC FROM BANDS WHERE USERNAME = ?"
 	params = (username,)
 	res = execute_query(sql, params)
@@ -48,18 +63,27 @@ def query_own_band_list(username):
 
 
 def query_others_band_list(username):
+	"""
+	query others band list except the player's
+	"""
 	sql = "SELECT NAME,USERNAME FROM BANDS WHERE USERNAME != ? AND PUBLIC = 1"
 	params = (username,)
 	res = execute_query(sql, params)
 	return res
 
 def query_band(name):
+	"""
+	query a band
+	"""
 	band_sql = "SELECT * FROM BANDS WHERE NAME = ?"
 	band_params = (name,)
 	band_res = execute_query(band_sql, band_params)
 	return band_res
 
 def query_band_detail(name):
+	"""
+	query the detail of a band , including data bout the captain and ensign
+	"""
 	band_sql = "SELECT * FROM BANDS WHERE NAME = ?"
 	band_params = (name,)
 	band_results = execute_query(band_sql, band_params)
@@ -87,6 +111,9 @@ def query_band_detail(name):
 
 
 def update_public_status(band_name, public_status):
+	"""
+	update the is_public status of a band
+	"""
 	sql = "UPDATE BANDS SET PUBLIC = ? WHERE NAME = ?"
 	params = (public_status, band_name)
 
@@ -95,7 +122,9 @@ def update_public_status(band_name, public_status):
 
 
 def insert_member(member, type):
-	
+	"""
+	insert a new member(captain or ensign)
+	"""
 	sql = "INSERT INTO MEMBERS (TYPE, MOVE, FIGHT, SHOOT, SHIELD, MORALE, HEALTH, SPECIALISM, SKILLS, WEAPONS, ITEMS) VALUES(?,?,?,?,?,?,?,?,?,?,?)"
 	params = (type, member["move"],member["fight"],member["shoot"],member["shield"],member["morale"],member["health"],member["specialism"],str(member["skills"]),member["weapons"],member["items"])
 
@@ -103,6 +132,9 @@ def insert_member(member, type):
 
 
 def insert_band(band):
+	"""
+	insert a new band
+	"""
 	sql = "INSERT INTO BANDS VALUES(?,?,?,?,?,?,?)"
 	params = (band["name"], band["username"], 0, band["captainId"], band["ensignId"], band["currency"], str(band["soldiers"]))
 
@@ -110,14 +142,38 @@ def insert_band(band):
 
 
 def update_member(member,id):
+	"""
+	update an existing member
+	"""
 	sql = "UPDATE MEMBERS SET MOVE=?,FIGHT=?,SHOOT=?,SHIELD=?,MORALE=?,HEALTH=?,SPECIALISM=?,SKILLS=?,EXPERIENCE=?,WEAPONS=?,ITEMS=? WHERE ID=?"
 	params = (member["move"],member["fight"],member["shoot"],member["shield"],member["morale"],member["health"],member["specialism"],str(member["skills"]),member["experience"],member["weapons"],member["items"],id)
 
 	return execute_update(sql, params)
 
 def update_band(band):
+	"""
+	update an existing band
+	"""
 	sql = "UPDATE BANDS SET CURRENCY=?,SOLDIERS=? WHERE NAME = ?"
 	params = (band["currency"], str(band["soldiers"]), band["name"])
 
 	return execute_update(sql, params)
+
+
+def delete_band(band):
+	"""
+	delete a band
+	"""
+	band_res = execute_query("SELECT * FROM BANDS WHERE NAME = ?", (band,))
+
+	captain_id = band_res[0][3]
+	ensign_id = band_res[0][4]
+
+	delete_member_res = execute_update("DELETE FROM MEMBERS WHERE ID=? or ID=?",(captain_id,ensign_id))
+	if delete_member_res == 0:
+		return 0
+	else:
+		return execute_update("DELETE FROM BANDS WHERE NAME=?",(band,))
+
+
 

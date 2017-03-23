@@ -39,7 +39,7 @@
 									<td>
 										<input type="checkbox" class="public" {{band[1] > 0 and 'checked="checked"' or ''}}>
 									</td>
-									<td><a href="/delete/{{band[0]}}">Delete</a></td>
+									<td><a href="javascript:if(confirm('Are you sure to delete the band? Data cannot be recovered.')){window.location = '/delete/{{band[0]}}';} ">Delete</a></td>
 								</tr>
 							{% endfor %}
 						</table>

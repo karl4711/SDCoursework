@@ -1,1 +1,1 @@
-flask-login
+Flask==0.12

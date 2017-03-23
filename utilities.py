@@ -7,6 +7,9 @@ import configs
 # -------------------
 
 def execute_query(sql, param = None):
+	"""
+	execute query sql, return the query result
+	"""
 	try:
 		conn = sqlite3.connect(configs.SQLITE_FILE)
 		if param == None:
@@ -23,6 +26,9 @@ def execute_query(sql, param = None):
 			conn.close()
 
 def execute_update(sql, param = None):
+	"""
+	execute update sql, return the total changes
+	"""
 	try:
 		conn = sqlite3.connect(configs.SQLITE_FILE)
 		if param == None:
@@ -42,6 +48,9 @@ def execute_update(sql, param = None):
 
 
 def execute_insert(sql, param = None):
+	"""
+	execute the insert sql, return the lastrowid
+	"""
 	try:
 		conn = sqlite3.connect(configs.SQLITE_FILE)
 		cursor=conn.cursor()

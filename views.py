@@ -9,16 +9,16 @@ views = Blueprint('views', __name__,
                         template_folder = 'templates',
                         static_folder = 'static')
 
-@views.route('/', methods=['GET'])
-def welcome_page():
-    return app.send_static_file('index.html'), httpcodes.OK
 
+@views.route('/', methods=['GET'])
 @views.route('/login', methods=['GET','POST'])
 def login():
+    """
+    login page and login request
+    """
     if request.method == 'GET':
         return render_template('login.html'), httpcodes.OK
     if request.method == 'POST':
-        app.logger.warn('login')
         username = request.form['username']
         user = query_user(username)
         if not user:
@@ -26,39 +26,24 @@ def login():
         if not user[1] == request.form['password']:
             return render_template('login.html', username = username, password_error = True)
         session["current_user"] = username
-        # {
-        #         "username" : username,
-        #     }
+
         return redirect(url_for('views.bandlist',username = username))
 
 @views.route('/logout', methods=['GET'])
 def logout():
+    """
+    log out the current account, return to the login page
+    """
     session.pop('current_user',None)
     return redirect(url_for("views.login"))
 
 
-def sumband(createdband):
-    total = 0;
-    for item in createdband['Captain']['Items']:
-        total = total + app.cost[item]
-    if 'Ensign' in createdband.keys():
-        total = total + 250
-        for item in   createdband['Captain']['Items']:
-            total = total + app.cost[item]
-    for troop in createdband['Troops']:
-        total = total + app.troops[troop]['Cost']
-    return total
-
-def validate_band(createdband):
-    ''' Need to write the validation '''
-    return True
-
-def validate_band(oldband,newband):
-    return True
-
 @views.route('/new', methods=['GET','POST'])
 @_login_required
 def new_warband():
+    """
+    create band page and create request
+    """
     result = {}
     if request.method == 'GET':
         print base_items
@@ -94,6 +79,9 @@ def new_warband():
 @views.route('/bandlist/<username>', methods=['GET'])
 @_login_required
 def bandlist(username):
+    """
+    bandlist page
+    """
     if session['current_user'] != username:
         abort(401)
     own_bands = query_own_band_list(username)
@@ -105,6 +93,9 @@ def bandlist(username):
 @views.route('/update_public', methods=['POST'])
 @_login_required
 def update_public():
+    """
+    udpate warband is_public status
+    """
     band_name = request.form['band_name']
     is_public = request.form['is_public']
 
@@ -116,6 +107,9 @@ def update_public():
 @views.route('/edit/<band>', methods=['GET','POST'])
 @_login_required
 def edit_warband(band):
+    """
+    edit existing warband
+    """
     if request.method == 'GET':
         band, captain, ensign = query_band_detail(band)
         if not band["username"] == session["current_user"] :
@@ -144,19 +138,19 @@ def edit_warband(band):
 @views.route('/look/<band>', methods=['GET'])
 @_login_required
 def look_warband(band):
+    """
+    look through others public warband
+    """
     band, captain, ensign = query_band_detail(band)
     return render_template('editband.html', troops=base_troops, specialisms = base_specialisms, items = base_items, band=band, captain=captain, ensign=ensign, username=session["current_user"], look=True), httpcodes.OK
 
 
 @views.route('/delete/<band>', methods=['GET'])
 @_login_required
-def delete_given_warband(band):
-    os.remove(os.path.join(os.path.dirname(os.path.realpath(__file__)), "bands",band))
-    if os.path.isdir(os.path.join(os.path.dirname(os.path.realpath(__file__)), "bands")):
-       bands = os.listdir(os.path.join(os.path.dirname(os.path.realpath(__file__)), "bands"))
-    else:
-       os.mkdir(os.path.join(os.path.dirname(os.path.realpath(__file__)), "bands"))
-       bands = None
-    if request.method == 'GET':
-       return render_template('bandlist.html', bands=bands), httpcodes.OK
+def delete_warband(band):
+    """
+    delete warband 
+    """
+    delete_band(band)
+    return redirect(url_for('views.bandlist',username = session["current_user"]))
 
