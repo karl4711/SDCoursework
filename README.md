@@ -4,7 +4,7 @@ This is the project for SD coursework 3.
 ### Download and setup:
 
 ```bash
-git clone git@github.com:karl4711/SDCoursework.git
+git clone https://github.com/karl4711/SDCoursework.git 
 cd SDCoursework
 pip install -r requirements.txt
 ```
